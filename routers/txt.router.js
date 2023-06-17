@@ -1,5 +1,5 @@
 import express from 'express';
-import control from '../controllers/txt.controller.js';
+import control from '../controllers/services.controller.js';
 const router = express.Router();
 
 router.post('/upload', control.upload);
