@@ -31,14 +31,13 @@ export default {
                 throw Error(
                     'لا يمكنك اجراء عملية الرفع الرجاء التاكد من ادخال الصورة بلشكل الصحيح'
                 );
-            readFileJson('/json/opinions.json', (data) => {
+            readFileJson('/json/servicesar.json', (data) => {
                 let generalId = uuidv4();
                 data.push({
                     id: generalId,
                     content: req.body.content.trim(),
-                    name:req.body.name.trim()
                 });
-                writeFileJson('/json/opinions.json', data, (err, result) => {
+                writeFileJson('/json/servicesar.json', data, (err, result) => {
                     if (err) console.error(err);
                 });
                 res.status(StatusCodes.OK).send({
@@ -55,7 +54,7 @@ export default {
     },
     delete: async (req, res) => {
         try {
-            readFileJson('/json/opinions.json', (data) => {
+            readFileJson('/json/servicesar.json', (data) => {
                 if (!data.find((content) => content.id === req.params.id)) {
                     return res.status(StatusCodes.BAD_REQUEST).send({
                         success: false,
@@ -63,7 +62,7 @@ export default {
                     });
                 }
                 writeFileJson(
-                    '/json/opinions.json',
+                    '/json/servicesar.json',
                     data.filter((content) => content.id != req.params.id),
                     (err, result) => {
                         if (err) {
@@ -91,7 +90,7 @@ export default {
     },
     all: async (req, res) => {
         try {
-            readFileJson('/json/opinions.json', (data) => {
+            readFileJson('/json/servicesar.json', (data) => {
                 res.status(StatusCodes.OK).send({
                     success: true,
                     data,

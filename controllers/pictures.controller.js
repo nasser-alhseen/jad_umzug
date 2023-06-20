@@ -2,9 +2,10 @@ import { StatusCodes } from 'http-status-codes';
 import _ from 'lodash';
 
 import { v4 as uuidv4 } from 'uuid';
-import { removePic } from '../utils/helper.js';
+import { moveFile, removePic } from '../utils/helper.js';
 import fs from 'fs';
 import path from 'path';
+import sharp from 'sharp';
 let readFileJson = (myPath, callback) => {
     fs.readFile(path.join(path.resolve(), myPath), 'utf8', (err, data) => {
         if (data.length === 0) return callback(null);
@@ -24,22 +25,47 @@ let writeFileJson = (myPath, data, callback) => {
         }
     });
 };
+async function convert(inputFilename, req) {
+    const outputFilename = `${path.parse(inputFilename).name}.jpg`;
+
+    let metadata = await sharp(inputFilename).metadata();
+    if (metadata.format === 'png') {
+        sharp(inputFilename)
+            .toFormat('jpeg')
+            .toFile(outputFilename, (err, info) => {
+                if (err) console.log(err);
+                else {
+                    moveFile(
+                        path.resolve() + '\\' + outputFilename,
+                        path.resolve() + '\\' + 'upload'
+                    );
+                    removePic(req.file.path);
+                }
+            });
+    }
+    return outputFilename;
+}
 
 export default {
-    upload: (req, res) => {
+    upload: async (req, res) => {
         try {
+            let filename = null;
             if (!req.file)
                 throw Error(
                     'لا يمكنك اجراء عملية الرفع الرجاء التاكد من ادخال الصورة بلشكل الصحيح'
                 );
-            readFileJson('/json/pictures.json', (data) => {
+
+            readFileJson('/json/pictures.json', async (data) => {
+                if (req.file.mimetype == 'image/png') {
+                    filename = await convert(req.file.path, req);
+                } else filename = req.file.filename;
                 let generalId = uuidv4();
                 data.push({
                     id: generalId,
-                    path: process.env.LINK + `/upload/${req.file.filename}`,
+                    path: process.env.LINK + `/upload/${filename}`,
                 });
                 writeFileJson('/json/pictures.json', data, (err, result) => {
-                    if (err) console.error(err);
+                    if (err) throw Error(err);
                 });
                 res.status(StatusCodes.OK).send({
                     success: true,
