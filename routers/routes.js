@@ -8,7 +8,6 @@ import opinionsRouter from './opinions._router.js';
 let router = express.Router();
 
 router.use('/image', pictures);
-
 router.use('/services', servicesRouter);
 router.use('/servicesar', servicesarRouter);
 router.use('/opinions', opinionsRouter);

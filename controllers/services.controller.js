@@ -31,20 +31,54 @@ export default {
                 throw Error(
                     'لا يمكنك اجراء عملية الرفع الرجاء التاكد من ادخال الصورة بلشكل الصحيح'
                 );
-            readFileJson('/json/services.json', (data) => {
-                let generalId = uuidv4();
-                data.push({
-                    id: generalId,
-                    content: req.body.content.trim(),
+            if (req.body.lang == 'en') {
+                readFileJson('/json/services.json', (data) => {
+                    let generalId = uuidv4();
+                    data.push({
+                        id: generalId,
+                        content: req.body.content.trim(),
+                    });
+                    writeFileJson('/json/services.json', data, (err, result) => {
+                        if (err) console.error(err);
+                    });
+                    res.status(StatusCodes.OK).send({
+                        success: true,
+                        data,
+                    });
                 });
-                writeFileJson('/json/services.json', data, (err, result) => {
-                    if (err) console.error(err);
+            } else if (req.body.lang == 'du') {
+                readFileJson('/json/servicesdu.json', (data) => {
+                    let generalId = uuidv4();
+                    data.push({
+                        id: generalId,
+                        content: req.body.content.trim(),
+                    });
+                    writeFileJson('/json/servicesdu.json', data, (err, result) => {
+                        if (err) console.error(err);
+                    });
+                    res.status(StatusCodes.OK).send({
+                        success: true,
+                        data,
+                    });
                 });
-                res.status(StatusCodes.OK).send({
-                    success: true,
-                    data,
+
+            }
+            else {
+                readFileJson('/json/servicesar.json', (data) => {
+                    let generalId = uuidv4();
+                    data.push({
+                        id: generalId,
+                        content: req.body.content.trim(),
+                    });
+                    writeFileJson('/json/servicesar.json', data, (err, result) => {
+                        if (err) console.error(err);
+                    });
+                    res.status(StatusCodes.OK).send({
+                        success: true,
+                        data,
+                    });
                 });
-            });
+            }
         } catch (error) {
             res.status(StatusCodes.BAD_REQUEST).send({
                 success: false,
@@ -90,12 +124,38 @@ export default {
     },
     all: async (req, res) => {
         try {
-            readFileJson('/json/services.json', (data) => {
-                res.status(StatusCodes.OK).send({
-                    success: true,
-                    data,
+            if (req.body.lang == 'en') {
+                readFileJson('/json/services.json', (data) => {
+                    res.status(StatusCodes.OK).send({
+                        success: true,
+                        data,
+                    });
                 });
-            });
+            }
+            else if (req.body.lang) {
+                readFileJson('/json/servicesdu.json', (data) => {
+                    let generalId = uuidv4();
+                    data.push({
+                        id: generalId,
+                        content: req.body.content.trim(),
+                    });
+                    writeFileJson('/json/servicesdu.json', data, (err, result) => {
+                        if (err) console.error(err);
+                    });
+                    res.status(StatusCodes.OK).send({
+                        success: true,
+                        data,
+                    });
+                });
+            }
+            else {
+                readFileJson('/json/servicesar.json', (data) => {
+                    res.status(StatusCodes.OK).send({
+                        success: true,
+                        data,
+                    });
+                });
+            }
         } catch (error) {
             res.status(StatusCodes.BAD_REQUEST).send({
                 success: false,

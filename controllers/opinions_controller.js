@@ -31,12 +31,12 @@ export default {
                 throw Error(
                     'لا يمكنك اجراء عملية الرفع الرجاء التاكد من ادخال الصورة بلشكل الصحيح'
                 );
+          if(req.body.lang=='en'){
             readFileJson('/json/opinions.json', (data) => {
                 let generalId = uuidv4();
                 data.push({
                     id: generalId,
                     content: req.body.content.trim(),
-                    name:req.body.name.trim()
                 });
                 writeFileJson('/json/opinions.json', data, (err, result) => {
                     if (err) console.error(err);
@@ -46,6 +46,39 @@ export default {
                     data,
                 });
             });
+          }else if(req.body.lang=='du'){
+            readFileJson('/json/opinionsdu.json', (data) => {
+                let generalId = uuidv4();
+                data.push({
+                    id: generalId,
+                    content: req.body.content.trim(),
+                });
+                writeFileJson('/json/opinionsdu.json', data, (err, result) => {
+                    if (err) console.error(err);
+                });
+                res.status(StatusCodes.OK).send({
+                    success: true,
+                    data,
+                });
+            });
+
+          }
+          else{
+            readFileJson('/json/opinionsar.json', (data) => {
+                let generalId = uuidv4();
+                data.push({
+                    id: generalId,
+                    content: req.body.content.trim(),
+                });
+                writeFileJson('/json/opinionsar.json', data, (err, result) => {
+                    if (err) console.error(err);
+                });
+                res.status(StatusCodes.OK).send({
+                    success: true,
+                    data,
+                });
+            });
+          }
         } catch (error) {
             res.status(StatusCodes.BAD_REQUEST).send({
                 success: false,
@@ -55,7 +88,7 @@ export default {
     },
     delete: async (req, res) => {
         try {
-            readFileJson('/json/opinions.json', (data) => {
+            readFileJson('/json/services.json', (data) => {
                 if (!data.find((content) => content.id === req.params.id)) {
                     return res.status(StatusCodes.BAD_REQUEST).send({
                         success: false,
@@ -63,7 +96,7 @@ export default {
                     });
                 }
                 writeFileJson(
-                    '/json/opinions.json',
+                    '/json/services.json',
                     data.filter((content) => content.id != req.params.id),
                     (err, result) => {
                         if (err) {
@@ -91,12 +124,38 @@ export default {
     },
     all: async (req, res) => {
         try {
-            readFileJson('/json/opinions.json', (data) => {
+          if(req.body.lang=='en'){
+            readFileJson('/json/opinionsar.json', (data) => {
                 res.status(StatusCodes.OK).send({
                     success: true,
                     data,
                 });
             });
+          }
+          else if(req.body.lang=='du'){
+            readFileJson('/json/opinionsdu.json', (data) => {
+                let generalId = uuidv4();
+                data.push({
+                    id: generalId,
+                    content: req.body.content.trim(),
+                });
+                writeFileJson('/json/opinionsdu.json', data, (err, result) => {
+                    if (err) console.error(err);
+                });
+                res.status(StatusCodes.OK).send({
+                    success: true,
+                    data,
+                });
+            });
+          }
+          else{
+            readFileJson('/json/opinionsar.json', (data) => {
+                res.status(StatusCodes.OK).send({
+                    success: true,
+                    data,
+                });
+            });
+          }
         } catch (error) {
             res.status(StatusCodes.BAD_REQUEST).send({
                 success: false,
