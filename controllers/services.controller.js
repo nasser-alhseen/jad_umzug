@@ -132,16 +132,8 @@ export default {
                     });
                 });
             }
-            else if (req.body.lang) {
+            else if (req.body.lang=='du') {
                 readFileJson('/json/servicesdu.json', (data) => {
-                    let generalId = uuidv4();
-                    data.push({
-                        id: generalId,
-                        content: req.body.content.trim(),
-                    });
-                    writeFileJson('/json/servicesdu.json', data, (err, result) => {
-                        if (err) console.error(err);
-                    });
                     res.status(StatusCodes.OK).send({
                         success: true,
                         data,
