@@ -37,6 +37,8 @@ export default {
                 data.push({
                     id: generalId,
                     content: req.body.content.trim(),
+                    name: req.body.name.trim(),
+
                 });
                 writeFileJson('/json/opinions.json', data, (err, result) => {
                     if (err) console.error(err);
