@@ -54,6 +54,8 @@ export default {
                 data.push({
                     id: generalId,
                     content: req.body.content.trim(),
+                    name: req.body.name.trim(),
+
                 });
                 writeFileJson('/json/opinionsdu.json', data, (err, result) => {
                     if (err) console.error(err);
@@ -71,6 +73,8 @@ export default {
                 data.push({
                     id: generalId,
                     content: req.body.content.trim(),
+                    name: req.body.name.trim(),
+
                 });
                 writeFileJson('/json/opinionsar.json', data, (err, result) => {
                     if (err) console.error(err);
